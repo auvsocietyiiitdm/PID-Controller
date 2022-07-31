@@ -20,6 +20,8 @@ void PIDController::setConstants(float Kp, float Ki, float Kd, float acceptable_
     Ki_               = Ki;
     Kd_               = Kd;
     acceptable_error_ = acceptable_error;
+    reset();
+    
 
 }
 
@@ -29,6 +31,7 @@ void PIDController::setMinMaxLimits(float output_min, float output_max, float in
     output_max_   = output_max;
     integral_min_ = integral_min;
     integral_max_ = integral_max;
+    reset();
 }
 
 void PIDController::setCurrentValue(float current_value){
@@ -86,6 +89,11 @@ float PIDController::updateOutput(float current_value, float target_value){
     updateOutput(current_value);
 }
 
+void PIDController::reset(){
+    p_  = i_  = d_  = 0;
+    prev_time_    = current_time_ = pid_clock_.now();
+
+}
 float PIDController::limitToRange(float value, float minimum, float maximum){
     if (value > maximum)
     {
