@@ -1,5 +1,8 @@
 #ifndef PID_CONTROLLER_H
 #define PID_CONTROLLER_H
+#include <chrono>
+#include <thread>
+
 class PIDController
 {
 private: 
@@ -8,6 +11,12 @@ private:
     float integral_max_,integral_min_;
     float output_max_,output_min_;
     float error_,acceptable_error_;
+
+    std::chrono::high_resolution_clock pid_clock_;
+    std::chrono::time_point< std::chrono::high_resolution_clock> prev_time_, current_time_;
+
+
+    float time_difference_;
     float p_,i_,d_;
     float output_;
     
@@ -15,7 +24,7 @@ private:
 public:
    
     
-    PIDController(/* args */);
+    PIDController();
     ~PIDController();
 
     void setConstants(float Kp, float Ki, float Kd,float acceptable_error);
