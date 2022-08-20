@@ -19,6 +19,7 @@ private:
     float time_difference_;
     float p_,i_,d_;
     float output_;
+    bool reset_;
     
     float limitToRange(float value, float minimum, float maximum);
 public:

@@ -1,4 +1,4 @@
-#include "PID_Controller.h"
+#include "PID_controller.h"
 #include <limits>
 #include <chrono>
 
@@ -67,8 +67,16 @@ float PIDController::updateOutput(){
 
     i_ = limitToRange(i_,integral_min_,integral_max_);
 
-    d_ = Kd_ * error_/(time_difference_);
-
+    if (reset_)
+    {
+        d_ = 0;
+        reset = false;
+    }
+    else
+    {
+        d_ = Kd_ * error_/(time_difference_);
+    }
+    
     output_ = p_ + i_ + d_;
 
     output_ = limitToRange(output_,output_min_,output_max_);
@@ -92,6 +100,7 @@ float PIDController::updateOutput(float current_value, float target_value){
 void PIDController::reset(){
     p_  = i_  = d_  = 0;
     prev_time_    = current_time_ = pid_clock_.now();
+    reset_ = true;
 
 }
 float PIDController::limitToRange(float value, float minimum, float maximum){
