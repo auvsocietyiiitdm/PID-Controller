@@ -70,7 +70,7 @@ float PIDController::updateOutput(){
     if (reset_)
     {
         d_ = 0;
-        reset = false;
+        reset_ = false;
     }
     else
     {
