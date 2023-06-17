@@ -1,13 +1,11 @@
 #include "PID_controller.h"
-#include <limits>
-#include <chrono>
 
 PIDController::PIDController(){
-    Kp_ = Ki_ = Kd_ = 0;
-    p_  = i_  = d_  = 0;
-    integral_min_ = output_min_ = std::numeric_limits<float>::min();
-    integral_max_ = output_max_ = std::numeric_limits<float>::max();
-    prev_time_    = current_time_ = pid_clock_.now();
+    _Kp = _Ki = _Kd= 0;
+    _integral_min = _output_min = -1000;
+    _integral_max = _output_max = 1000;
+    _acceptable_error = 0.1;
+    reset();
 }
 
 PIDController::~PIDController(){
@@ -16,10 +14,10 @@ PIDController::~PIDController(){
 
 void PIDController::setConstants(float Kp, float Ki, float Kd, float acceptable_error){
 
-    Kp_               = Kp;
-    Ki_               = Ki;
-    Kd_               = Kd;
-    acceptable_error_ = acceptable_error;
+    _Kp               = Kp;
+    _Ki              = Ki;
+    _Kd             = Kd;
+    _acceptable_error = acceptable_error;
     reset();
     
 
@@ -27,82 +25,57 @@ void PIDController::setConstants(float Kp, float Ki, float Kd, float acceptable_
 
 void PIDController::setMinMaxLimits(float output_min, float output_max, float integral_min, float integral_max){
 
-    output_min_   = output_min;
-    output_max_   = output_max;
-    integral_min_ = integral_min;
-    integral_max_ = integral_max;
+    _output_min  = output_min;
+    _output_max  = output_max;
+    _integral_min = integral_min;
+    _integral_max = integral_max;
     reset();
 }
 
-void PIDController::setCurrentValue(float current_value){
-
-    current_value_ = current_value;
-}
 
 void PIDController::setTargetValue(float target_value){
 
-    target_value_ = target_value;
+    _target_value = target_value;
 }
 
-float PIDController::updateOutput(){
+float PIDController::updateOutput(float current_value,float rate_of_change,float time_difference){
 
-    current_time_ = pid_clock_.now();
-    time_difference_ = (float) std::chrono::duration_cast<std::chrono::milliseconds> ( current_time_ - prev_time_ ).count();
-    prev_time_       = current_time_;
+    float error, p, i, d, output;    
+    error = _target_value - current_value;
     
-    error_ = target_value_ - current_value_;
-    
-    if ( ( error_ >= 0 ) &&    ( error_ <= acceptable_error_  ) )
+    if ( ( error >= 0 ) &&    ( error <= _acceptable_error  ) )
     {
-        error_ = 0;
+        error = 0;
     }
-    else if (( error_ < 0 ) &&    ( error_ >= acceptable_error_  ))
+    else if (( error < 0 ) &&    ( error >= _acceptable_error  ))
     {
-        error_ = 0;
+        error = 0;
     }
     
-    p_ = Kp_ * error_;
+    p = _Kp * error;
 
-    i_ = Ki_ * error_* time_difference_;
+    i += _Ki * error* time_difference;
 
-    i_ = limitToRange(i_,integral_min_,integral_max_);
-
-    if (reset_)
-    {
-        d_ = 0;
-        reset_ = false;
-    }
-    else
-    {
-        d_ = Kd_ * error_/(time_difference_);
-    }
+    i = limitToRange(i,_integral_min,_integral_max);
+    _integrated_error += i;
+    d = _Kd * rate_of_change;
     
-    output_ = p_ + i_ + d_;
+    output = p + i + d;
 
-    output_ = limitToRange(output_,output_min_,output_max_);
-
-
-    return output_;
-
-
+    output = limitToRange(output,_output_min,_output_max);
+    return output;
 }
 
-float PIDController::updateOutput(float current_value){
-    setCurrentValue(current_value);
-    updateOutput();
-}
-
-float PIDController::updateOutput(float current_value, float target_value){
+float PIDController::updateOutput(float current_value,float rate_of_change,float time_difference,float target_value){
     setTargetValue(target_value);
-    updateOutput(current_value);
+    return updateOutput(current_value,rate_of_change,time_difference);
 }
+
 
 void PIDController::reset(){
-    p_  = i_  = d_  = 0;
-    prev_time_    = current_time_ = pid_clock_.now();
-    reset_ = true;
-
+    _integrated_error = 0;
 }
+
 float PIDController::limitToRange(float value, float minimum, float maximum){
     if (value > maximum)
     {
