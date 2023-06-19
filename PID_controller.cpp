@@ -40,11 +40,11 @@ void PIDController::setTargetValue(double target_value){
     _target_value = target_value;
 }
 
-double PIDController::updateOutput(double current_value,double rate_of_change){
-    updateOutput(current_value,rate_of_change,1/_frequency);
+double PIDController::getOutput(double current_value,double rate_of_change){
+    getOutput(current_value,rate_of_change,1/_frequency);
 }
 
-double PIDController::updateOutput(double current_value,double rate_of_change,double time_difference){
+double PIDController::getOutput(double current_value,double rate_of_change,double time_difference){
 
     double error, p, i, d, output;    
     error = _target_value - current_value;
@@ -72,9 +72,9 @@ double PIDController::updateOutput(double current_value,double rate_of_change,do
     return output;
 }
 
-double PIDController::updateOutput(double current_value,double rate_of_change,double time_difference,double target_value){
+double PIDController::getOutput(double current_value,double rate_of_change,double time_difference,double target_value){
     setTargetValue(target_value);
-    return updateOutput(current_value,rate_of_change,time_difference);
+    return getOutput(current_value,rate_of_change,time_difference);
 }
 
 
