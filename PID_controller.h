@@ -11,6 +11,7 @@ private:
     float _output_max,_output_min;
     float _acceptable_error;
     float _integrated_error;
+    float _frequency;
     
     float limitToRange(float value, float minimum, float maximum);
 public:
@@ -19,10 +20,10 @@ public:
     PIDController();
     ~PIDController();
 
-    void setConstants(float Kp, float Ki, float Kd,float acceptable_error);
+    void setConstants(float Kp, float Ki, float Kd,float acceptable_error,float frequency);
     void setMinMaxLimits(float output_min, float output_max, float integral_min, float integral_max);
     void setTargetValue(float target_value);
-
+    float updateOutput(float current_value,float rate_of_change);
     float updateOutput(float current_value,float rate_of_change,float time_difference);
     float updateOutput(float current_value,float rate_of_change,float time_difference,float target_value);
     void reset();

@@ -5,6 +5,7 @@ PIDController::PIDController(){
     _integral_min = _output_min = -1000;
     _integral_max = _output_max = 1000;
     _acceptable_error = 0.1;
+    _frequency = 1;
     reset();
 }
 
@@ -12,12 +13,13 @@ PIDController::~PIDController(){
 
 }
 
-void PIDController::setConstants(float Kp, float Ki, float Kd, float acceptable_error){
+void PIDController::setConstants(float Kp, float Ki, float Kd, float acceptable_error,float frequency){
 
     _Kp               = Kp;
     _Ki              = Ki;
     _Kd             = Kd;
     _acceptable_error = acceptable_error;
+    _frequency = frequency;
     reset();
     
 
@@ -36,6 +38,10 @@ void PIDController::setMinMaxLimits(float output_min, float output_max, float in
 void PIDController::setTargetValue(float target_value){
 
     _target_value = target_value;
+}
+
+float PIDController::updateOutput(float current_value,float rate_of_change){
+    updateOutput(current_value,rate_of_change,1/_frequency);
 }
 
 float PIDController::updateOutput(float current_value,float rate_of_change,float time_difference){
