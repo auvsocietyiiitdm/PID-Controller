@@ -40,13 +40,13 @@ void PIDController::setTargetValue(double target_value){
     _target_value = target_value;
 }
 
-double PIDController::getOutput(double current_value,double rate_of_change){
-    getOutput(current_value,rate_of_change,1/_frequency);
+void PIDController::updateOutput(double current_value,double rate_of_change){
+    updateOutput(current_value,rate_of_change,1/_frequency);
 }
 
-double PIDController::getOutput(double current_value,double rate_of_change,double time_difference){
+void PIDController::updateOutput(double current_value,double rate_of_change,double time_difference){
 
-    double error, p, i, d, output;    
+    double error, p, i, d;    
     error = _target_value - current_value;
     
     if ( ( error >= 0 ) &&    ( error <= _acceptable_error  ) )
@@ -66,20 +66,24 @@ double PIDController::getOutput(double current_value,double rate_of_change,doubl
     _integrated_error += i;
     d = _Kd * rate_of_change;
     
-    output = p + i + d;
+    _output = p + i + d;
 
-    output = limitToRange(output,_output_min,_output_max);
-    return output;
+    _output = limitToRange(_output,_output_min,_output_max);
 }
 
-double PIDController::getOutput(double current_value,double rate_of_change,double time_difference,double target_value){
+void PIDController::updateOutput(double current_value,double rate_of_change,double time_difference,double target_value){
     setTargetValue(target_value);
-    return getOutput(current_value,rate_of_change,time_difference);
+    updateOutput(current_value,rate_of_change,time_difference);
+}
+
+double getOutput(){
+    return _output;
 }
 
 
 void PIDController::reset(){
     _integrated_error = 0;
+    _output = 0;
 }
 
 double PIDController::limitToRange(double value, double minimum, double maximum){

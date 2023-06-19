@@ -12,6 +12,7 @@ private:
     double _acceptable_error;
     double _integrated_error;
     double _frequency;
+    double _output;
     
     double limitToRange(double value, double minimum, double maximum);
 public:
@@ -23,9 +24,10 @@ public:
     void setConstants(double Kp, double Ki, double Kd,double acceptable_error,double frequency);
     void setMinMaxLimits(double output_min, double output_max, double integral_min, double integral_max);
     void setTargetValue(double target_value);
-    double getOutput(double current_value,double rate_of_change);
-    double getOutput(double current_value,double rate_of_change,double time_difference);
-    double getOutput(double current_value,double rate_of_change,double time_difference,double target_value);
+    void updateOutput(double current_value,double rate_of_change);
+    void updateOutput(double current_value,double rate_of_change,double time_difference);
+    void updateOutput(double current_value,double rate_of_change,double time_difference,double target_value);
+    double getOutput();
     void reset();
 
     
