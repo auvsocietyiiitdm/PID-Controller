@@ -5,27 +5,27 @@
 class PIDController
 {
 private: 
-    float _Kp,_Ki,_Kd;
-    float _target_value;
-    float _integral_max,_integral_min;
-    float _output_max,_output_min;
-    float _acceptable_error;
-    float _integrated_error;
-    float _frequency;
+    double _Kp,_Ki,_Kd;
+    double _target_value;
+    double _integral_max,_integral_min;
+    double _output_max,_output_min;
+    double _acceptable_error;
+    double _integrated_error;
+    double _frequency;
     
-    float limitToRange(float value, float minimum, float maximum);
+    double limitToRange(double value, double minimum, double maximum);
 public:
    
     
     PIDController();
     ~PIDController();
 
-    void setConstants(float Kp, float Ki, float Kd,float acceptable_error,float frequency);
-    void setMinMaxLimits(float output_min, float output_max, float integral_min, float integral_max);
-    void setTargetValue(float target_value);
-    float updateOutput(float current_value,float rate_of_change);
-    float updateOutput(float current_value,float rate_of_change,float time_difference);
-    float updateOutput(float current_value,float rate_of_change,float time_difference,float target_value);
+    void setConstants(double Kp, double Ki, double Kd,double acceptable_error,double frequency);
+    void setMinMaxLimits(double output_min, double output_max, double integral_min, double integral_max);
+    void setTargetValue(double target_value);
+    double updateOutput(double current_value,double rate_of_change);
+    double updateOutput(double current_value,double rate_of_change,double time_difference);
+    double updateOutput(double current_value,double rate_of_change,double time_difference,double target_value);
     void reset();
 
     

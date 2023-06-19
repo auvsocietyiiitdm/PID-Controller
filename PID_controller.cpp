@@ -13,7 +13,7 @@ PIDController::~PIDController(){
 
 }
 
-void PIDController::setConstants(float Kp, float Ki, float Kd, float acceptable_error,float frequency){
+void PIDController::setConstants(double Kp, double Ki, double Kd, double acceptable_error,double frequency){
 
     _Kp               = Kp;
     _Ki              = Ki;
@@ -25,7 +25,7 @@ void PIDController::setConstants(float Kp, float Ki, float Kd, float acceptable_
 
 }
 
-void PIDController::setMinMaxLimits(float output_min, float output_max, float integral_min, float integral_max){
+void PIDController::setMinMaxLimits(double output_min, double output_max, double integral_min, double integral_max){
 
     _output_min  = output_min;
     _output_max  = output_max;
@@ -35,18 +35,18 @@ void PIDController::setMinMaxLimits(float output_min, float output_max, float in
 }
 
 
-void PIDController::setTargetValue(float target_value){
+void PIDController::setTargetValue(double target_value){
 
     _target_value = target_value;
 }
 
-float PIDController::updateOutput(float current_value,float rate_of_change){
+double PIDController::updateOutput(double current_value,double rate_of_change){
     updateOutput(current_value,rate_of_change,1/_frequency);
 }
 
-float PIDController::updateOutput(float current_value,float rate_of_change,float time_difference){
+double PIDController::updateOutput(double current_value,double rate_of_change,double time_difference){
 
-    float error, p, i, d, output;    
+    double error, p, i, d, output;    
     error = _target_value - current_value;
     
     if ( ( error >= 0 ) &&    ( error <= _acceptable_error  ) )
@@ -72,7 +72,7 @@ float PIDController::updateOutput(float current_value,float rate_of_change,float
     return output;
 }
 
-float PIDController::updateOutput(float current_value,float rate_of_change,float time_difference,float target_value){
+double PIDController::updateOutput(double current_value,double rate_of_change,double time_difference,double target_value){
     setTargetValue(target_value);
     return updateOutput(current_value,rate_of_change,time_difference);
 }
@@ -82,7 +82,7 @@ void PIDController::reset(){
     _integrated_error = 0;
 }
 
-float PIDController::limitToRange(float value, float minimum, float maximum){
+double PIDController::limitToRange(double value, double minimum, double maximum){
     if (value > maximum)
     {
         return maximum;
