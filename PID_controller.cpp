@@ -13,35 +13,85 @@ PIDController::~PIDController(){
 
 }
 
-void PIDController::setConstants(double Kp, double Ki, double Kd, double acceptable_error,double frequency){
+void PIDController::setKp(double Kp){
+    _Kp = Kp;
+}
 
-    _Kp               = Kp;
-    _Ki              = Ki;
-    _Kd             = Kd;
-    _acceptable_error = acceptable_error;
+void PIDController::setKi(double Ki){
+    _Ki = Ki;
+}
+
+void PIDController::setKd(double Kd){
+    _Kd = Kd;
+}
+
+void PIDController::setFrequency(double frequency){
     _frequency = frequency;
-    reset();
-    
-
 }
 
-void PIDController::setMinMaxLimits(double output_min, double output_max, double integral_min, double integral_max){
 
-    _output_min  = output_min;
-    _output_max  = output_max;
+void PIDController::setAcceptableError(double acceptable_error){
+    _acceptable_error = acceptable_error;
+}
+
+double PIDController::getKp(){
+    return _Kp;
+}
+
+double PIDController::getKi(){
+    return _Ki;
+}
+
+double PIDController::getKd(){
+    return _Kd;
+}
+
+double PIDController::getAcceptableError(){
+    return _acceptable_error;
+}
+
+double PIDController::getFrequency(){
+    return _frequency;
+}
+
+void PIDController::setOutputMin(double output_min){
+    _output_min = output_min;
+}
+
+void PIDController::setOutputMax(double output_max){
+    _output_max = output_max;
+}
+
+void PIDController::setIntegralMin(double integral_min){
     _integral_min = integral_min;
-    _integral_max = integral_max;
-    reset();
 }
 
+void PIDController::setIntegralMax(double integral_max){
+    _integral_max = integral_max;
+}
+
+double PIDController::getOutputMin(){
+    return _output_min;
+}
+
+double PIDController::getOutputMax(){
+    return _output_max;
+}
+
+double PIDController::getIntegralMin(){
+    return _integral_min;
+}
+
+double PIDController::getIntegralMax(){
+    return _integral_max;
+}
 
 void PIDController::setTargetValue(double target_value){
-
     _target_value = target_value;
 }
 
-void PIDController::updateOutput(double current_value,double rate_of_change){
-    updateOutput(current_value,rate_of_change,1/_frequency);
+double PIDController::getTargetValue(){
+    return _target_value;
 }
 
 void PIDController::updateOutput(double current_value,double rate_of_change,double time_difference){
@@ -76,6 +126,10 @@ void PIDController::updateOutput(double current_value,double rate_of_change,doub
     updateOutput(current_value,rate_of_change,time_difference);
 }
 
+void PIDController::updateOutput(double current_value,double rate_of_change){
+    updateOutput(current_value,rate_of_change,1/_frequency);
+}
+
 double PIDController::getOutput(){
     return _output;
 }
@@ -99,7 +153,5 @@ double PIDController::limitToRange(double value, double minimum, double maximum)
     {
         return value;
     }
-    
-    
-    
+
 }
