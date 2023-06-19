@@ -76,7 +76,7 @@ void PIDController::updateOutput(double current_value,double rate_of_change,doub
     updateOutput(current_value,rate_of_change,time_difference);
 }
 
-double getOutput(){
+double PIDController::getOutput(){
     return _output;
 }
 
